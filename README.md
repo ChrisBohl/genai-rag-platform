@@ -1,44 +1,60 @@
 # GenAI-RAG-Platform
 
-Dieses Repository vereint einen modular aufgebauten GenAI-Technologie-Stack mit Schwerpunkt auf datenschutzkonformer Nutzung in Unternehmenskontexten. Es integriert:
+## Projektziel
 
-- **AnythingLLM (neueste Version)** als RAG-Plattform mit GUI und Vektorunterstützung
-- Einen **DSGVO-konformen FastAPI-Agenten**, der als Custom Skill über die AnythingLLM-GUI eingebunden ist
-- Eine **klare Trennung von Backend, Skills und Datenhaltung** in einem Docker-basierten Setup
+Ziel dieses Projekts ist der Aufbau einer modularen, containerisierten Plattform für **Retrieval-Augmented Generation (RAG)** mithilfe von [AnythingLLM](https://github.com/Mintplex-Labs/anything-llm) und einem lokalen **DSGVO-konformen KI-Agenten**, der über eine FastAPI-Schnittstelle angesprochen wird. 
+
+Die Plattform verfolgt insbesondere folgende Ziele:
+
+- Bereitstellung einer benutzerfreundlichen Web-Oberfläche (AnythingLLM) für kontextbasierte LLM-Interaktionen
+- Integration eines lokalen DSGVO-Agents als ausführbare „Custom Skill“ innerhalb von AnythingLLM
+- Einhaltung der Datenschutzgrundverordnung (DSGVO) durch lokale Verarbeitung, Trennung von Verantwortlichkeiten und keine externe Datenübertragung
+- Modularität und Erweiterbarkeit durch Docker, Custom Skills und einen sauberen Codeaufbau
+- Bereitstellung einer sauberen Codebasis und Dokumentation für künftige Entwickler oder Auditoren
 
 ---
 
 ## Projektstruktur
 
-```text
+```bash
 GenAI-RAG-Platform/
+├── dsgvo-agent/              # Lokaler FastAPI-Agent zur DSGVO-Auskunft
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── agent.py
+│   │   └── prompts.yaml
+│   ├── main.py
+│   └── requirements.txt
 │
-├── dsgvo-agent/              # FastAPI-basierter DSGVO-Agent
-│   ├── app/                  # API-Logik
-│   ├── main.py               # Entry Point
-│   └── requirements.txt      # Python-Abhängigkeiten
+├── skills/                   # Custom Skill für AnythingLLM
+│   └── dsgvo-agent.js
 │
-├── rag-anythingllm/          # Offizielle AnythingLLM-Installation (Cloned Codebase)
-│
-├── skills/                   # Enthält eigene Skills (z. B. DSGVO-Agent)
-│   └── dsgvo-agent.js        # Der Skill als .js/.mjs Datei
-│
-├── Dockerfile                # Custom Build für AnythingLLM mit node-fetch
-├── docker-compose.yml        # Orchestrierung von AnythingLLM mit Mounts
-└── .env                      # Umgebungsvariablen (derzeit leer)
+├── Dockerfile                # Dockerfile für eigenen AnythingLLM-Build (inkl. node-fetch)
+├── docker-compose.yml        # Startet LLM-GUI & bindet DSGVO-Agent ein
+├── .env                      # Umgebungskonfiguration (leer oder optional)
+└── README.md                 # Diese Dokumentation
 ```
 
 ---
 
 ## Setup
 
-### Voraussetzungen
+### Tech-Stack
 
+- AnythingLLM (aktuelle Version, lokal gebautes Image)
 - Docker & Docker Compose
-- Python 3.11+ mit `uvicorn`, `fastapi`, `pydantic`
-- Node.js **muss lokal nicht installiert** sein – es wird im Container bereitgestellt.
+- FastAPI (Python 3.10)
+- Node.js / JavaScript (Custom Skill)
+- Ollama (optional, lokale LLM-Anbindung)
+- Prisma / SQLite (intern AnythingLLM)
 
 ---
+
+## Setup-Anleitung
+### Voraussetzungen
+- Docker & Docker Compose installiert
+- Python ≥ 3.10 installiert (für DSGVO-Agent)
+- Node.js & npm (für Skill-Entwicklung, falls lokal)
 
 ### Start der Anwendung
 
